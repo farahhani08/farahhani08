@@ -29,7 +29,7 @@ class App{
 		this.scene = new THREE.Scene();
         this.scene.add( this.dolly );
         
-		const ambient = new THREE.HemisphereLight(0.96, 0.98, 0.90, 0.8);
+		const ambient = new THREE.HemisphereLight(0x00D6D6, 0xFFA1FF, 0.7);
 		this.scene.add(ambient);
 
 		this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -74,7 +74,7 @@ class App{
         
         const self = this;
         
-        loader.load( './assets/hdr/beautiful-blue-sky-with-white-clouds.hdr', ( texture ) => {
+        loader.load( './assets/hdr/venice_sunset_1k.hdr', ( texture ) => {
           const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
           pmremGenerator.dispose();
 
