@@ -29,7 +29,7 @@ class App{
 		this.scene = new THREE.Scene();
         this.scene.add( this.dolly );
         
-		const ambient = new THREE.HemisphereLight(0xFFA1FF, 0xFFD966, 0.7);
+		const ambient = new THREE.HemisphereLight(0x369AF6, 0xE33FE3, 0.8);
 		this.scene.add(ambient);
 
 		this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -205,10 +205,22 @@ class App{
         
         this.ui = new CanvasUI( content, config );
         this.scene.add( this.ui.mesh );
+	    //*modified code, implement movement controls using the W, A, S, and D keys to move the camera within the virtual environment
+	    this.moveForward = false;
+	    this.moveBackward = false;
+	    this.moveLeft = false;
+	    this.moveRight = false;
+
+	    this.moveSpeed = 2; //can adjust as needed
+	    this.moveVector = new THREE.Vector3();
+
+	    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
+	    document.addEventListener(keyup', this.onKeyUp.bind(this), false);
+	    //*
         
         this.renderer.setAnimationLoop( this.render.bind(this) );
     }
-    
+	
     buildControllers( parent = this.scene ){
         const controllerModelFactory = new XRControllerModelFactory();
 
@@ -298,7 +310,42 @@ class App{
         //Restore the original rotation
         this.dolly.quaternion.copy( quaternion );
 	}
-		
+
+	//*new code
+	onKeyDown(event) {
+  switch (event.keyCode) {
+    case 87: // W key
+      this.moveForward = true;
+      break;
+    case 83: // S key
+      this.moveBackward = true;
+      break;
+    case 65: // A key
+      this.moveLeft = true;
+      break;
+    case 68: // D key
+      this.moveRight = true;
+      break;
+  }
+}
+
+onKeyUp(event) {
+  switch (event.keyCode) {
+    case 87: // W key
+      this.moveForward = false;
+      break;
+    case 83: // S key
+      this.moveBackward = false;
+      break;
+    case 65: // A key
+      this.moveLeft = false;
+      break;
+    case 68: // D key
+      this.moveRight = false;
+      break;
+  }
+}
+//*		
     get selectPressed(){
         return ( this.controllers !== undefined && (this.controllers[0].userData.selectPressed || this.controllers[1].userData.selectPressed) );    
     }
@@ -325,7 +372,31 @@ class App{
                 this.gazeController.update();
                 moveGaze = (this.gazeController.mode == GazeController.Modes.MOVE);
             }
-        
+
+	// *Check for keyboard input and update camera movement
+  if (this.moveForward) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  if (this.moveBackward) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.multiplyScalar(-this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  if (this.moveLeft) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.applyAxisAngle(this.up, Math.PI / 2);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  if (this.moveRight) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.applyAxisAngle(this.up, -Math.PI / 2);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  //*      
             if (this.selectPressed || moveGaze){
                 this.moveDolly(dt);
                 if (this.boardData){
