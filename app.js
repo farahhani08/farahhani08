@@ -205,52 +205,52 @@ class App{
         
         this.ui = new CanvasUI( content, config );
         this.scene.add( this.ui.mesh );
-	    //*modified code, implement movement controls using the W, A, S, and D keys to move the camera within the virtual environment
-	    //this.moveForward = false;
-	    //this.moveBackward = false;
-	    this.rotateLeft = false;
-	    this.rotateRight = false;
+//*modified code, implement movement controls using the W, A, S, and D keys to move the camera within the virtual environment
+this.moveForward = false;
+this.moveBackward = false;
+this.moveLeft = false;
+this.moveRight = false;
 
-	    this.rotationSpeed = Math.PI / 2; //can adjust as needed
-	    //this.moveVector = new THREE.Vector3();
+this.moveSpeed = 2; // Adjust the movement speed as needed
+this.moveVector = new THREE.Vector3();
 
-	    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
-	    document.addEventListener('keyup', this.onKeyUp.bind(this), false);
-	    //*
+document.addEventListener('keydown', this.onKeyDown.bind(this), false);
+document.addEventListener('keyup', this.onKeyUp.bind(this), false);
+//*
         
         this.renderer.setAnimationLoop( this.render.bind(this) );
     }
 	//*new code
 	onKeyDown(event) {
   switch (event.keyCode) {
-    //case 87: // W key
-      //this.moveForward = true;
-      //break;
-    //case 83: // S key
-      //this.moveBackward = true;
-      //break;
+    case 87: // W key
+      this.moveForward = true;
+      break;
+    case 83: // S key
+      this.moveBackward = true;
+      break;
     case 65: // A key
-      this.rotateLeft = true;
+      this.moveLeft = true;
       break;
     case 68: // D key
-      this.rotateRight = true;
+      this.moveRight = true;
       break;
   }
 }
 
 onKeyUp(event) {
   switch (event.keyCode) {
-    //case 87: // W key
-      //this.moveForward = false;
-      //break;
-    //case 83: // S key
-      //this.moveBackward = false;
-      //break;
+    case 87: // W key
+      this.moveForward = false;
+      break;
+    case 83: // S key
+      this.moveBackward = false;
+      break;
     case 65: // A key
-      this.rotateLeft = false;
+      this.moveLeft = false;
       break;
     case 68: // D key
-      this.rotateRight = false;
+      this.moveRight = false;
       break;
   }
 }
@@ -365,21 +365,27 @@ onKeyUp(event) {
         const dt = this.clock.getDelta();
 
 // *Check for keyboard input and update camera movement
-  //if (this.moveForward) {
-    //this.camera.getWorldDirection(this.moveVector);
-    //this.moveVector.multiplyScalar(this.moveSpeed * dt);
-    //this.dolly.position.add(this.moveVector);
-  //}
-  //if (this.moveBackward) {
-    //this.camera.getWorldDirection(this.moveVector);
-    //this.moveVector.multiplyScalar(-this.moveSpeed * dt);
-    //this.dolly.position.add(this.moveVector);
-  //}
-  if (this.rotateLeft) {
-    this.dolly.rotation.y += this.rotationSpeed * dt;
+  if (this.moveForward) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
   }
-  if (this.rotateRight) {
-    this.dolly.rotation.y -= this.rotationSpeed * dt;
+  if (this.moveBackward) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.multiplyScalar(-this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  if (this.moveLeft) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.applyAxisAngle(this.up, Math.PI / 2);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
+  }
+  if (this.moveRight) {
+    this.camera.getWorldDirection(this.moveVector);
+    this.moveVector.applyAxisAngle(this.up, -Math.PI / 2);
+    this.moveVector.multiplyScalar(this.moveSpeed * dt);
+    this.dolly.position.add(this.moveVector);
   }
   //* 		
         if (this.renderer.xr.isPresenting){
