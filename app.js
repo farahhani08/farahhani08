@@ -212,7 +212,7 @@ class App{
 	    this.rotateRight = false;
 
 	    this.rotationSpeed = Math.PI / 2; //can adjust as needed
-	    this.moveVector = new THREE.Vector3();
+	    //this.moveVector = new THREE.Vector3();
 
 	    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
 	    document.addEventListener('keyup', this.onKeyUp.bind(this), false);
