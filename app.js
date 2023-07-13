@@ -215,7 +215,7 @@ class App{
 	    this.moveVector = new THREE.Vector3();
 
 	    document.addEventListener('keydown', this.onKeyDown.bind(this), false);
-	    document.addEventListener(keyup', this.onKeyUp.bind(this), false);
+	    document.addEventListener('keyup', this.onKeyUp.bind(this), false);
 	    //*
         
         this.renderer.setAnimationLoop( this.render.bind(this) );
