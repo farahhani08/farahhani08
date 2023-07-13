@@ -220,7 +220,41 @@ class App{
         
         this.renderer.setAnimationLoop( this.render.bind(this) );
     }
-	
+	//*new code
+	onKeyDown(event) {
+  switch (event.keyCode) {
+    case 87: // W key
+      this.moveForward = true;
+      break;
+    case 83: // S key
+      this.moveBackward = true;
+      break;
+    case 65: // A key
+      this.moveLeft = true;
+      break;
+    case 68: // D key
+      this.moveRight = true;
+      break;
+  }
+}
+
+onKeyUp(event) {
+  switch (event.keyCode) {
+    case 87: // W key
+      this.moveForward = false;
+      break;
+    case 83: // S key
+      this.moveBackward = false;
+      break;
+    case 65: // A key
+      this.moveLeft = false;
+      break;
+    case 68: // D key
+      this.moveRight = false;
+      break;
+  }
+}
+//*	
     buildControllers( parent = this.scene ){
         const controllerModelFactory = new XRControllerModelFactory();
 
@@ -310,42 +344,7 @@ class App{
         //Restore the original rotation
         this.dolly.quaternion.copy( quaternion );
 	}
-
-	//*new code
-	onKeyDown(event) {
-  switch (event.keyCode) {
-    case 87: // W key
-      this.moveForward = true;
-      break;
-    case 83: // S key
-      this.moveBackward = true;
-      break;
-    case 65: // A key
-      this.moveLeft = true;
-      break;
-    case 68: // D key
-      this.moveRight = true;
-      break;
-  }
-}
-
-onKeyUp(event) {
-  switch (event.keyCode) {
-    case 87: // W key
-      this.moveForward = false;
-      break;
-    case 83: // S key
-      this.moveBackward = false;
-      break;
-    case 65: // A key
-      this.moveLeft = false;
-      break;
-    case 68: // D key
-      this.moveRight = false;
-      break;
-  }
-}
-//*		
+	
     get selectPressed(){
         return ( this.controllers !== undefined && (this.controllers[0].userData.selectPressed || this.controllers[1].userData.selectPressed) );    
     }
@@ -364,16 +363,8 @@ onKeyUp(event) {
 
 	render( timestamp, frame ){
         const dt = this.clock.getDelta();
-        
-        if (this.renderer.xr.isPresenting){
-            let moveGaze = false;
-        
-            if ( this.useGaze && this.gazeController!==undefined){
-                this.gazeController.update();
-                moveGaze = (this.gazeController.mode == GazeController.Modes.MOVE);
-            }
 
-	// *Check for keyboard input and update camera movement
+// *Check for keyboard input and update camera movement
   if (this.moveForward) {
     this.camera.getWorldDirection(this.moveVector);
     this.moveVector.multiplyScalar(this.moveSpeed * dt);
@@ -396,7 +387,15 @@ onKeyUp(event) {
     this.moveVector.multiplyScalar(this.moveSpeed * dt);
     this.dolly.position.add(this.moveVector);
   }
-  //*      
+  //* 		
+        if (this.renderer.xr.isPresenting){
+            let moveGaze = false;
+        
+            if ( this.useGaze && this.gazeController!==undefined){
+                this.gazeController.update();
+                moveGaze = (this.gazeController.mode == GazeController.Modes.MOVE);
+            }
+     
             if (this.selectPressed || moveGaze){
                 this.moveDolly(dt);
                 if (this.boardData){
