@@ -185,16 +185,16 @@ class App{
         const btn = new VRButton( this.renderer );
         
         const self = this;
+
+	    // Call loadAudio method to load and play the audio
+    	this.loadAudio();
+	this.renderer.setAnimationLoop(this.render.bind(this));
         
         const timeoutId = setTimeout( connectionTimeout, 2000 );
         
         function onSelectStart( event ) {
         
             this.userData.selectPressed = true;
-
-	// Call loadAudio method to load and play the audio
-    	this.loadAudio();
-	this.renderer.setAnimationLoop(this.render.bind(this));
         }
 
         function onSelectEnd( event ) {
