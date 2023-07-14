@@ -9,6 +9,7 @@ import { VRButton } from './libs/VRButton.js';
 import { CanvasUI } from './libs/CanvasUI.js';
 import { GazeController } from './libs/GazeController.js'
 import { XRControllerModelFactory } from './libs/three/jsm/XRControllerModelFactory.js';
+import { AudioLoader, PositionalAudio } from './libs/three/jsm/AudioLoader.js';
 
 class App{
 	constructor(){
@@ -19,13 +20,14 @@ class App{
         
 		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 500 );
 		this.camera.position.set( 0, 1.8, 10.0 );
+		this.audioSource = null; // Declare audioSource variable
         
         this.dolly = new THREE.Object3D(  );
         this.dolly.position.set(0, 0, 10);
         this.dolly.add( this.camera );
         this.dummyCam = new THREE.Object3D();
         this.camera.add( this.dummyCam );
-        
+		
 		this.scene = new THREE.Scene();
         this.scene.add( this.dolly );
         
@@ -65,6 +67,8 @@ class App{
                 self.boardShown = '';
                 self.boardData = obj;
             });
+		
+	this.setupXR();
 	}
 	
     setEnvironment(){
@@ -153,7 +157,28 @@ class App{
 			}
 		);
 	}
-    
+
+	loadAudio() { //audio
+    const self = this;
+
+    const audioLoader = new AudioLoader();
+    audioLoader.load('./assets/Way-Home.mp3', function (buffer) {
+      const audio = new PositionalAudio(self.listener);
+      audio.setBuffer(buffer);
+      audio.setLoop(true);
+      audio.setVolume(0.5);
+
+      self.audioSource = new THREE.Object3D();
+      self.audioSource.position.set(0, 1.8, 10.0); // Set the desired position of the audio source in the scene
+      self.audioSource.add(audio);
+
+      self.scene.add(self.audioSource);
+
+      // Play the audio continuously
+      audio.play();
+    });
+  }
+	
     setupXR(){
         this.renderer.xr.enabled = true;
 
@@ -166,7 +191,10 @@ class App{
         function onSelectStart( event ) {
         
             this.userData.selectPressed = true;
-        
+
+	// Call loadAudio method to load and play the audio
+    	this.loadAudio();
+	this.renderer.setAnimationLoop(this.render.bind(this));
         }
 
         function onSelectEnd( event ) {
