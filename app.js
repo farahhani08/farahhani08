@@ -1,3 +1,4 @@
+
 import * as THREE from './libs/three/three.module.js';
 import { GLTFLoader } from './libs/three/jsm/GLTFLoader.js';
 import { DRACOLoader } from './libs/three/jsm/DRACOLoader.js';
@@ -18,14 +19,13 @@ class App{
         
 		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 500 );
 		this.camera.position.set( 0, 1.8, 10.0 );
-		//this.audioSource = null; // Declare audioSource variable
         
         this.dolly = new THREE.Object3D(  );
         this.dolly.position.set(0, 0, 10);
         this.dolly.add( this.camera );
         this.dummyCam = new THREE.Object3D();
         this.camera.add( this.dummyCam );
-		
+        
 		this.scene = new THREE.Scene();
         this.scene.add( this.dolly );
         
@@ -65,8 +65,6 @@ class App{
                 self.boardShown = '';
                 self.boardData = obj;
             });
-		
-	this.setupXR();
 	}
 	
     setEnvironment(){
@@ -95,7 +93,7 @@ class App{
     
 	loadCollege(){
         
-	const loader = new GLTFLoader( ).setPath(this.assetsPath);
+		const loader = new GLTFLoader( ).setPath(this.assetsPath);
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath( './libs/three/js/draco/' );
         loader.setDRACOLoader( dracoLoader );
@@ -155,43 +153,20 @@ class App{
 			}
 		);
 	}
-
-//loadAudio() { //audio
-    //const self = this;
-
-    //const audioLoader = new AudioLoader();
-    //audioLoader.load('./assets/Way-Home.mp3', function (buffer) {
-      //const audio = new PositionalAudio(self.listener);
-      //audio.setBuffer(buffer);
-      //audio.setLoop(true);
-      //audio.setVolume(0.5);
-
-      //self.audioSource = new THREE.Object3D();
-      //self.audioSource.position.set(0, 1.8, 10.0); // Set the desired position of the audio source in the scene
-      //self.audioSource.add(audio);
-
-      //self.scene.add(self.audioSource);
-
-      // Play the audio continuously
-      //audio.play();
-    //});
-  //}
-	
+    
     setupXR(){
         this.renderer.xr.enabled = true;
 
         const btn = new VRButton( this.renderer );
         
         const self = this;
-
-	    // Call loadAudio method to load and play the audio
-    	//this.loadAudio();
         
         const timeoutId = setTimeout( connectionTimeout, 2000 );
         
         function onSelectStart( event ) {
         
             this.userData.selectPressed = true;
+        
         }
 
         function onSelectEnd( event ) {
@@ -242,6 +217,7 @@ this.moveVector = new THREE.Vector3();
 document.addEventListener('keydown', this.onKeyDown.bind(this), false);
 document.addEventListener('keyup', this.onKeyUp.bind(this), false);
 //*
+        
         this.renderer.setAnimationLoop( this.render.bind(this) );
     }
 	//*new code
