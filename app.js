@@ -18,7 +18,7 @@ class App{
         
 		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.01, 500 );
 		this.camera.position.set( 0, 1.8, 10.0 );
-		this.audioSource = null; // Declare audioSource variable
+		//this.audioSource = null; // Declare audioSource variable
         
         this.dolly = new THREE.Object3D(  );
         this.dolly.position.set(0, 0, 10);
@@ -95,7 +95,7 @@ class App{
     
 	loadCollege(){
         
-		const loader = new GLTFLoader( ).setPath(this.assetsPath);
+	const loader = new GLTFLoader( ).setPath(this.assetsPath);
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath( './libs/three/js/draco/' );
         loader.setDRACOLoader( dracoLoader );
@@ -156,26 +156,26 @@ class App{
 		);
 	}
 
-	loadAudio() { //audio
-    const self = this;
+//loadAudio() { //audio
+    //const self = this;
 
-    const audioLoader = new AudioLoader();
-    audioLoader.load('./assets/Way-Home.mp3', function (buffer) {
-      const audio = new PositionalAudio(self.listener);
-      audio.setBuffer(buffer);
-      audio.setLoop(true);
-      audio.setVolume(0.5);
+    //const audioLoader = new AudioLoader();
+    //audioLoader.load('./assets/Way-Home.mp3', function (buffer) {
+      //const audio = new PositionalAudio(self.listener);
+      //audio.setBuffer(buffer);
+      //audio.setLoop(true);
+      //audio.setVolume(0.5);
 
-      self.audioSource = new THREE.Object3D();
-      self.audioSource.position.set(0, 1.8, 10.0); // Set the desired position of the audio source in the scene
-      self.audioSource.add(audio);
+      //self.audioSource = new THREE.Object3D();
+      //self.audioSource.position.set(0, 1.8, 10.0); // Set the desired position of the audio source in the scene
+      //self.audioSource.add(audio);
 
-      self.scene.add(self.audioSource);
+      //self.scene.add(self.audioSource);
 
       // Play the audio continuously
-      audio.play();
-    });
-  }
+      //audio.play();
+    //});
+  //}
 	
     setupXR(){
         this.renderer.xr.enabled = true;
@@ -185,8 +185,7 @@ class App{
         const self = this;
 
 	    // Call loadAudio method to load and play the audio
-    	this.loadAudio();
-	//this.renderer.setAnimationLoop(this.render.bind(this));
+    	//this.loadAudio();
         
         const timeoutId = setTimeout( connectionTimeout, 2000 );
         
