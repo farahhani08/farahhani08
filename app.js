@@ -9,7 +9,6 @@ import { VRButton } from './libs/VRButton.js';
 import { CanvasUI } from './libs/CanvasUI.js';
 import { GazeController } from './libs/GazeController.js'
 import { XRControllerModelFactory } from './libs/three/jsm/XRControllerModelFactory.js';
-import { AudioLoader, PositionalAudio } from './libs/three/jsm/AudioLoader.js';
 
 class App{
 	constructor(){
